@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #222;
+            height: 2000px;
+            /* Tan grande para poder hacer scroll */
+        }
+
+        h1 {
+            color: white;
+            text-wrap: balance;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            top: 35%;
+            transform: translate(-50%, -50%);
+            font-size: 15vw;
+            width: 100%;
+        }
+        canvas {
+            position: fixed;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            aspect-ratio: 1068/600;
+            width: 100%;
+        }
+    </style>
+    <title>Animations with ScrollTrigger</title>
+</head>
+
+<body>
+
+    <h1 class="title">AirPods Pro</h1>
+
+    <canvas id="hero"> </canvas>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script>
+
+
+        // Animaciones por SCROLL
+        // En tools -> sccroll (y aquí en) -> Docs y copiamos el CDN de ScrollTrigger
+        // y hay que registrarlo al ser un pluging
+
+        gsap.registerPlugin(SplitText)
+        gsap.registerPlugin(ScrollTrigger)
+
+        gsap.to(".title", {
+            scale: 1.5,
+            autoAlpha: 0,
+            scrollTrigger: {
+                markers: true, // NUNCA EN PRODUCCIÓN, solo para desarrollar ya que da unas "marcas" indicando donde empieza la animación donde termina, etc ...
+                start: 1500, // indicamos cuando empieza la animación en px (aquí a los 1500px empieza), se puede poner "center center" lo que hace es cuando llegue a la mitad empieza la animación.
+                scrub: 0.5, // vincula el progreso de la animación con el scroll. Con true se activa y también si ponemos un número es el tiempo en seg que tarda en reaccionar a la animación
+            }
+
+        })
+
+        const canvas = document.getElementById("hero")
+        const ctx = canvas.getContext("2d")
+
+        canvas.width = 1068
+        canvas.height = 600
+
+        const TOTAL_FRAMES = 65
+
+        const createURL = (frame) => {
+            const id = frame.toString().padStart(4,"0")
+            return `https://www.apple.com/105/media/us/airpods-pro/2022/d2deeb8e-83eb-48ea-9721-f567cf0fffa8/anim/hero/medium/${id}.png`
+        }
+
+        const images = Array.from({length: TOTAL_FRAMES}, (_, i) => {
+            const img = new Image()
+            img.src = createURL(i)
+            // console.log(img.src)
+            return img
+        })
+
+
+        const airpods = {
+            frame: 0
+        }
+
+        gsap.to(airpods, {
+            frame: TOTAL_FRAMES -1,
+            ease: "none", // sin suavizado ni nada ya que las imagenes tienen que ser lineales
+            snap: "frame", // snap indica que cada vez que actualice para realizar la animación en este caso vaya foto a foto, 1 a 1 
+            scrollTrigger: {
+                scrub: 0.5,
+            },
+            onUpdate: render // cada vez que se actualice llame al método render
+        })
+
+        // Renderizar la imagenes en el canvas
+        images[0].onload = () => render()
+        
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height) // limpia el "rectangulo" del canvas
+            console.log(images)
+            ctx.drawImage(images[airpods.frame], 0, 0)
+
+        }
+
+       
+    </script>
+</body>
+
+</html>

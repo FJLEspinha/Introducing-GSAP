@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #222;
+        }
+
+        h1 {
+            color: white;
+            text-wrap: balance;
+            text-align: center;
+        }
+    </style>
+    <title>Text Animation with GSAP</title>
+</head>
+
+<body>
+
+
+    <h1 class="text">El código es poesía, pero también puede ser magia visual con GSAP</h1>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+
+    <script>
+        // Hay dos plugings que son muy potentes y usados
+        // El del Scroll y la de Linear que hace un blur, va hacia arriba etc
+
+        // Animaciones para el TEXTO
+        // 1º La del texto hay que ir pag de plgings => SplitText y en este caso copiamos el CDN
+        // si tuviesemos las biblioteca instalada/cargada habría que importar
+        // SIEMPRE QUE SE USE UN PLUGIN hay que "REGISTRARLO"
+        gsap.registerPlugin(SplitText)
+
+        const splitText = new SplitText(".text", {
+            type: "words, chars, lines",  // Hay varios tipos palabras = words, cacracteres = chars, líneas = lines. También se puede por los 3 a la vez
+        }) // Con esto separamos el texto
+
+        // ¿Qué es lo más pesado? de menor a mayor:
+        // 1- lineas
+        // 2- palabras
+        // 3- letras
+        // Lo mejor en el type poner solo 1, porque, aunque no se use, en el DOM pone todas las opciones y se sobrecarga type: "words"
+        // En ACCESIBILIDAD ya se preocupa GSAP en no volver locos a los lectores de pantalla pone el aria lbel en uno y el resto de cosas que hace en hidden
+        // Pero la accesibilidad es muy personalizable si se necesita o quiere
+
+        // Ahora la animación. Va a ser siempre desde donde from
+        // Esta seria la animacion que usa Linear
+        gsap.from(splitText.words, {
+            duration: 1,
+            y:10, // Estado inicial por eso se mueve de abajo arriba
+            stagger: 0.1, // indicamos que entre cada palabra pase medio segundo entre animacion
+            autoAlpha: 0, // Cuando la opacidad ha pasado a ser 0 también cambia la visibilidad opacidad 0 hasta que se vea
+            filter: "blur(10px)" // Empieza teniendo blur y acaba sin tenerlo
+            
+        })
+
+
+        // Animaciones por SCROLL en scrollAnimation.html
+     
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #222;
+        }
+
+        .box {
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            background-color: #09f;
+            margin-bottom: 4px;
+
+            &.purple {
+                background: rebeccapurple;
+            }
+
+            &.yellow {
+                background: yellow;
+            }
+        }
+
+        #log {
+            color: white;
+        }
+    </style>
+    <title>GSAP Course</title>
+</head>
+
+<body>
+
+    <div class="box purple"></div>
+    <div class="box blue"></div>
+    <div class="box yellow"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+
+
+
+    <footer>
+        <button id="play">reproducir</button>
+        <button id="pause">pausar</button>
+        <button id="resume">resumir</button>
+        <button id="reverse">revertir</button>
+        <button id="restart">reiniciar</button>
+        <button id="turbo">turbo</button>
+    </footer>
+    <small id="log"></small>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <!-- npm instal gsap y hacer import de la biblioteca (los componenetes que necesitamos)-->
+    <script>
+       
+        // Animación -> tween
+
+        // gsap.to('.box:first-child', {
+        //     x: 100,
+        //     duration: 1
+        // })
+        // gsap.to('.box:nth-child(2)', {
+        //     x:200,
+        //     duration:1
+        // })
+
+        // const boxes = document.querySelectorAll('.box')
+        // boxes.forEach((box, i) => {
+        //     gsap.to(box, {
+        //         x:100,
+        //         duration: 1,
+        //         delay: i * 0.4
+        //     })
+        // })
+
+        // Lo mismo de arriba pero solo usando gsap
+        // porpiedad stagger -> escalonado
+
+        // gsap.to('.box', {
+        //     x: 200,
+        //     duration: 1,
+        //     stagger: 0.5 // medio segundo
+        // })
+
+
+        // Una animación un poco más complicada
+        //     gsap.to('.box', {
+        //     x: 200,
+        //     duration: 1,
+        //     //stagger: 0.5 // medio segundo
+        //     rotate: 360, // rota
+        //     scale: .5, // se va hacieno más pequeña
+        //     repeat: 5, // repite 5 veces, -1 = infinito
+        //     yoyo: true, // va y viene
+        //     stagger: 0.5, // no permite repetir hasta que hace la última anicmación.
+        // })
+
+        // poniendo las propiedades en "otro orden" ya que,
+        // stagger permite objetos se aprecia la diferencia con el anterior caso
+
+        //     gsap.to('.box', {
+        //     x: 200,
+        //     duration: 1,
+        //     rotate: 360, // rota
+        //     scale: .5, // se va hacieno más pequeña
+        //     // Así lo tenemos a nivel de cada elemento de forma escalonada
+        //     stagger: {
+        //         each: 0.2,
+        //         repeat: 5, // repite 5 veces, -1 = infinito
+        //          yoyo: true, // va y viene
+        //     } 
+        // })
+
+
+        // SUAVIZADOS -> easing Es la curva de animación
+        // DOCU -> https://gsap.com/docs/v3/Eases
+
+        //     gsap.to('.box.purple', {
+        //         x: 200,
+        //         duration: 2,
+        //         rotate: 360,
+        //         scale: .75,
+        //         repeat: -1,
+        //         yoyo: true,
+        //         ease: 'bounce.out', // más tipos: back.in back.out expo.out steps(5)
+        //     })
+
+        // gsap.to('.box.blue', {
+        //         x: 200,
+        //         duration: 2,
+        //         rotate: 360,
+        //         scale: .75,
+        //         repeat: -1,
+        //         yoyo: true
+        //     })
+
+        // LINEA DE TIEMPO añadimos una nueva caja
+
+        // SIN la línea del tiempo (timeline) tenemos que calcular los delay y duracion
+        // gsap.to('.box.purple', {
+        //     x: 200,
+        //     duration: 2,
+
+        // })
+
+        // gsap.to('.box.blue', {
+        //     duration: 1,
+        //     y: -92,
+        //     delay: 2,
+        // })
+
+        // gsap.to('.box.yellow', {
+        //   y: -188,
+        //   x: 101,
+        //   delay: 3,
+        // })
+
+        //CON timeline Ya no hace falta hacer el cálculo Aquí va una detrás de otra
+        // const tl = gsap.timeline({
+        //     defaults: {
+        //         duration: 2
+        //     }
+        // })
+
+        // tl
+        //     .to('.box.purple', {
+        //         x: 200
+        //     })
+        //     .to('.box.blue',{
+        //         duration: .2, // sobrescribiendo  valores por defecto
+        //         y: -92,
+        //     })
+        //     .to('.box.yellow', {
+        //         y: -188,
+        //         x: 101,
+        //     })
+
+        // PARÁMETROS DE POSICION EN EL TIMELINE Uso si queremos, por ej, ocurran 2 animaciones a la vez ...
+        // const tl = gsap.timeline({
+        //     defaults: {
+        //         duration: 2
+        //     }
+        // })
+
+        // tl
+        //     .to('.box.purple', {
+        //         x: 200
+        //     })
+        //     .to('.box.blue', {
+        //         y: -92,
+        //     }, '<') // empieza al mismo tiempo que la purple, el anterior incrementar un segundo +=1, valores absolutos 1 ...
+        //     .to('.box.yellow', {
+        //         y: -188,
+        //         x: 101,
+        //     })
+
+
+
+        // Métodos comunes. NO USAR window esto es un ejemplo rápido
+        // window.play.onclick = () => {
+        //     tl.play()
+        //     window.log.innerHTML += "play <br>"
+        // }
+        // window.pause.onclick = () => {
+        //     tl.pause()
+        //     window.log.innerHTML += "pause <br>"
+        // }
+
+        // window.resume.onclick = () => {
+        //     tl.resume()
+        //     window.log.innerHTML += "resume <br>"
+        // }
+
+        // window.reverse.onclick = () => {
+        //     tl.reverse()
+        //     window.log.innerHTML += "reverse <br>"
+        // }
+
+        // window.restart.onclick = () => {
+        //     tl.restart()
+        //     window.log.innerHTML += "restart <br>"
+        // }
+        // window.turbo.onclick = () => {
+        //     tl.timeScale(5)
+        //     window.log.innerHTML += "turbo <br>"
+        // }
+
+
+        // CALLBACK Métodods que se ejecutarán cuando ocurra algo en la animación
+
+        const tl = gsap.timeline({
+            defaults: {
+                duration: 2,
+               
+            },
+            onComplete: () => { // Cuando se compolete la animacion que pasé algo, como ej ir una página Más Útil/Común
+                window.log.innerHTML += '[eveent] complete <br>'
+            },
+            onStart: () => { // Más Útil/Común
+                window.log.innerHTML += '[event] satart <br>'
+            },
+            onRepeat: () => {
+                window.log.innerHTML += '[event] repeat <br>'
+
+            },
+            onRepeatComplete: () => {
+                window.log.innerHTML += '[event] repeatComplete <br>'
+                
+            },
+            onRepeatStart: () => { 
+                window.log.innerHTML += '[event] repeatStart <br>'
+
+            },
+            onReverseComplete: () => { // Más Útil/Común
+                window.log.innerHTML += '[event] reverseComplete <br>'
+
+            }
+        })
+
+        tl
+            .to('.box.purple', {
+                x: 200
+            })
+            .to('.box.blue', {
+                y: -92,
+            }, '<')
+            .to('.box.yellow', {
+                y: -188,
+                x: 101,
+            })
+
+
+        window.play.onclick = () => {
+            tl.play()
+            window.log.innerHTML += "play <br>"
+        }
+        window.pause.onclick = () => {
+            tl.pause()
+            window.log.innerHTML += "pause <br>"
+        }
+
+        window.resume.onclick = () => {
+            tl.resume()
+            window.log.innerHTML += "resume <br>"
+        }
+
+        window.reverse.onclick = () => {
+            tl.reverse()
+            window.log.innerHTML += "reverse <br>"
+        }
+
+        window.restart.onclick = () => {
+            tl.restart()
+            window.log.innerHTML += "restart <br>"
+        }
+        window.turbo.onclick = () => {
+            tl.timeScale(5)
+            window.log.innerHTML += "turbo <br>"
+        }
+
+
+        // Hay dos plugings que son muy potentes y usados
+        // El del Scroll y la de Linear que hace un blur, va hacia arriba etc
+
+        // 1º La del texto hay que ir pag de plgings y en SplitText y en este caso copiamos el CDN en un script
+        // si tuviesemos las biblioteca instalada/cargada habría que importar
+        // Ver en textAnimation.html
+
+
+         
+
+    </script>
+</body>
+
+</html>
